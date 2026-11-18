@@ -1,13 +1,17 @@
 import { provideInventoryRepository } from '@/core/di/inventory.di.server';
 import { ListMaterials } from '@/features/inventory/domain/usecases/material-usecases';
 import { ListWorkFronts } from '@/features/inventory/domain/usecases/issue-usecases';
+import { connection } from 'next/server';
 import { IssueForm } from '@/features/inventory/presentation/components/issue-form';
 import { inventoryStrings } from '@/features/inventory/presentation/strings/inventory-strings';
 
+// Reads live DB data: opt out of static-shell validation (instant = false)
+// and move the query to request time with connection().
 export const instant = false;
 
 /** HU-02: digital issue voucher. */
 export default async function IssuesPage() {
+  await connection();
   const repo = provideInventoryRepository();
   const [materialsResult, frontsResult] = await Promise.all([
     new ListMaterials(repo).execute(),

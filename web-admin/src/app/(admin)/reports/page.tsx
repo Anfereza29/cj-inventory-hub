@@ -1,18 +1,21 @@
 import { provideInventoryRepository } from '@/core/di/inventory.di.server';
+import { connection } from 'next/server';
 import { GetCostReport, ListProjects } from '@/features/inventory/domain/usecases/report-usecases';
 import { inventoryStrings } from '@/features/inventory/presentation/strings/inventory-strings';
-
-export const instant = false;
 
 /**
  * HU-06: biweekly cost report per project/period (generated without manual
  * typing). HU-07: one-click Excel export via the API route.
  */
+export const instant = false;
+
 export default async function ReportsPage({
   searchParams,
 }: {
   searchParams: Promise<{ project?: string; from?: string; to?: string }>;
 }) {
+  // Reads live DB data + searchParams: move to request time with connection().
+  await connection();
   const repo = provideInventoryRepository();
   const params = await searchParams;
 

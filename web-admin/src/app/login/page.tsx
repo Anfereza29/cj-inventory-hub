@@ -3,7 +3,7 @@ import { provideServerAuthRepository } from '@/core/di/auth.di.server';
 import { GetCurrentUser } from '@/features/auth/domain/usecases/get-current-user';
 import { LoginContainer } from '@/features/auth/presentation/containers/login-container';
 
-// Reads the session cookie on every request; cannot be prerendered.
+// Reads the session cookie (cookies()) on every request; blocking route.
 export const instant = false;
 
 /**

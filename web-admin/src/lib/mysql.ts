@@ -1,4 +1,5 @@
 import 'server-only';
+import type tls from 'node:tls';
 import mysql from 'mysql2/promise';
 
 /**
@@ -25,6 +26,19 @@ export function getPool(): mysql.Pool {
     // (set it for TiDB; leave unset/false for local MySQL).
     const useSsl = (process.env.MYSQL_SSL ?? 'false').toLowerCase() === 'true';
 
+    // mysql2 forwards these options to Node's TLS layer, which accepts
+    // `servername` (SNI). mysql2's own `SslOptions` type omits it, so build
+    // the object with the broader TLS type and cast when assigning. TiDB
+    // Cloud needs the SNI set to the host, otherwise the handshake drops the
+    // password and auth fails ("password: NO").
+    const sslOptions = useSsl
+      ? ({
+          minVersion: 'TLSv1.2',
+          rejectUnauthorized: true,
+          servername: readEnv('MYSQL_HOST'),
+        } satisfies tls.ConnectionOptions as mysql.PoolOptions['ssl'])
+      : undefined;
+
     globalThis.__cjMysqlPool = mysql.createPool({
       host: readEnv('MYSQL_HOST'),
       port: Number(process.env.MYSQL_PORT ?? '3306'),
@@ -34,17 +48,7 @@ export function getPool(): mysql.Pool {
       waitForConnections: true,
       connectionLimit: 10,
       namedPlaceholders: false,
-      ...(useSsl
-        ? {
-            ssl: {
-              minVersion: 'TLSv1.2',
-              rejectUnauthorized: true,
-              // TiDB Cloud needs the TLS SNI set to the host, otherwise the
-              // handshake drops the password and auth fails ("password: NO").
-              servername: readEnv('MYSQL_HOST'),
-            },
-          }
-        : {}),
+      ssl: sslOptions,
     });
   }
   return globalThis.__cjMysqlPool;

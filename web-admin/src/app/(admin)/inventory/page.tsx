@@ -4,10 +4,12 @@ import {
   ListRecentMovements,
 } from '@/features/inventory/domain/usecases/stock-usecases';
 import { ListWorkFronts } from '@/features/inventory/domain/usecases/issue-usecases';
+import { connection } from 'next/server';
 import { InventoryHub } from '@/features/inventory/presentation/components/inventory-hub';
 import { inventoryStrings } from '@/features/inventory/presentation/strings/inventory-strings';
 
-// Reads live data each request.
+// Reads live DB data: opt out of static-shell validation (instant = false)
+// and move the query to request time with connection().
 export const instant = false;
 
 /**
@@ -15,6 +17,7 @@ export const instant = false;
  * entry (HU-01) and issue (HU-02) actions as modals, plus recent movements.
  */
 export default async function InventoryPage() {
+  await connection();
   const repo = provideInventoryRepository();
   const [balancesResult, frontsResult, recentResult] = await Promise.all([
     new ListBalances(repo).execute(),

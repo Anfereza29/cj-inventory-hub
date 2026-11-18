@@ -1,13 +1,17 @@
+import { connection } from 'next/server';
 import Link from 'next/link';
 import { provideInventoryRepository } from '@/core/di/inventory.di.server';
 import { ListMaterials } from '@/features/inventory/domain/usecases/material-usecases';
 import { MaterialForm } from '@/features/inventory/presentation/components/material-form';
 import { inventoryStrings } from '@/features/inventory/presentation/strings/inventory-strings';
 
+// Reads live DB data: opt out of static-shell validation (instant = false)
+// and move the query to request time with connection().
 export const instant = false;
 
 /** HU-00: material catalog with ABC classification (Pantalla B del MVP). */
 export default async function CatalogPage() {
+  await connection();
   const result = await new ListMaterials(provideInventoryRepository()).execute();
   const materials = result.ok ? result.value : [];
 

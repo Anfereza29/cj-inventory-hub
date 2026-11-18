@@ -2,21 +2,24 @@ import { provideInventoryRepository } from '@/core/di/inventory.di.server';
 import { ListMaterials } from '@/features/inventory/domain/usecases/material-usecases';
 import { ListWorkFronts } from '@/features/inventory/domain/usecases/issue-usecases';
 import { GetConsumptionDeviation } from '@/features/inventory/domain/usecases/report-usecases';
+import { connection } from 'next/server';
 import { CountForm } from '@/features/inventory/presentation/components/count-form';
 import { inventoryStrings } from '@/features/inventory/presentation/strings/inventory-strings';
-
-export const instant = false;
 
 /**
  * HU-04: physical count / reconciliation.
  * HU-05: consumption deviation per work front (first front shown by default,
  * selectable via the ?front= query param).
  */
+export const instant = false;
+
 export default async function ReconciliationPage({
   searchParams,
 }: {
   searchParams: Promise<{ front?: string }>;
 }) {
+  // Reads live DB data + searchParams: move to request time with connection().
+  await connection();
   const repo = provideInventoryRepository();
   const params = await searchParams;
 

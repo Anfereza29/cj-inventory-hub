@@ -5,7 +5,8 @@ import { GetCurrentUser } from '@/features/auth/domain/usecases/get-current-user
 import { sectionsForRole } from '@/features/auth/presentation/access/role-access';
 import { SignOutButton } from '@/features/auth/presentation/components/sign-out-button';
 
-// Reads the session cookie on every request; cannot be prerendered.
+// Reads the session cookie (cookies()) on every request, so this layout
+// blocks the prerender; opt out of static-shell validation for admin routes.
 export const instant = false;
 
 /**
