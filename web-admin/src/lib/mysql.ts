@@ -21,6 +21,10 @@ declare global {
 
 export function getPool(): mysql.Pool {
   if (!globalThis.__cjMysqlPool) {
+    // TiDB Cloud requires a TLS connection. Enable SSL when MYSQL_SSL=true
+    // (set it for TiDB; leave unset/false for local MySQL).
+    const useSsl = (process.env.MYSQL_SSL ?? 'false').toLowerCase() === 'true';
+
     globalThis.__cjMysqlPool = mysql.createPool({
       host: readEnv('MYSQL_HOST'),
       port: Number(process.env.MYSQL_PORT ?? '3306'),
@@ -30,6 +34,17 @@ export function getPool(): mysql.Pool {
       waitForConnections: true,
       connectionLimit: 10,
       namedPlaceholders: false,
+      ...(useSsl
+        ? {
+            ssl: {
+              minVersion: 'TLSv1.2',
+              rejectUnauthorized: true,
+              // TiDB Cloud needs the TLS SNI set to the host, otherwise the
+              // handshake drops the password and auth fails ("password: NO").
+              servername: readEnv('MYSQL_HOST'),
+            },
+          }
+        : {}),
     });
   }
   return globalThis.__cjMysqlPool;
