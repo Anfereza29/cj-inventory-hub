@@ -65,7 +65,7 @@ export function LoginForm({ onSubmit, loading, errorMessage }: LoginFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="mt-2 rounded-md bg-slate-900 px-4 py-2 font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-2 rounded-md bg-brand px-4 py-2 font-medium text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? authStrings.submitLoading : authStrings.submitButton}
       </button>

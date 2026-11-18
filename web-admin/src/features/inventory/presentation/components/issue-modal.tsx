@@ -128,7 +128,7 @@ export function IssueModal({
         <button
           type="submit"
           disabled={isPending}
-          className="mt-1 rounded-lg bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800 disabled:opacity-60"
+          className="mt-1 rounded-lg bg-brand px-4 py-3 text-sm font-bold text-white hover:bg-brand-dark disabled:opacity-60"
         >
           {isPending ? inventoryStrings.saving : inventoryStrings.dispatch}
         </button>

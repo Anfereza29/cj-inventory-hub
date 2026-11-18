@@ -27,15 +27,15 @@ export default async function AdminLayout({ children }: LayoutProps<'/'>) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-3">
+      <header className="flex items-center justify-between bg-gradient-to-r from-brand-darker to-brand px-6 py-3 shadow-sm">
         <div className="flex items-center gap-6">
-          <span className="font-semibold text-slate-900">Constructora C&amp;J</span>
+          <span className="font-semibold text-white">Constructora C&amp;J</span>
           <nav className="flex gap-4">
             {sections.map((section) => (
               <Link
                 key={section.key}
                 href={section.href}
-                className="text-sm text-slate-600 transition hover:text-slate-900"
+                className="text-sm text-slate-300 transition hover:text-white"
               >
                 {section.label}
               </Link>
@@ -43,7 +43,7 @@ export default async function AdminLayout({ children }: LayoutProps<'/'>) {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-slate-500">{user.fullName}</span>
+          <span className="text-sm text-slate-300">{user.fullName}</span>
           <SignOutButton />
         </div>
       </header>

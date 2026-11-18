@@ -73,7 +73,7 @@ export function CountForm({ materials }: { materials: Material[] }) {
       <button
         type="submit"
         disabled={isPending}
-        className="self-start rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:opacity-60"
+        className="self-start rounded-md bg-brand px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-dark disabled:opacity-60"
       >
         {isPending ? inventoryStrings.saving : inventoryStrings.save}
       </button>

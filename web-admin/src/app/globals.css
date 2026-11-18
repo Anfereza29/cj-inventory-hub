@@ -5,10 +5,21 @@
  * green/amber/red semaphore). We do NOT follow the OS dark mode, which would
  * turn the page background black and clash with the design. Colors come from
  * Tailwind utility classes on each element; the body just sets a light base.
+ *
+ * Brand palette (Option A): a deep slate primary for the header, primary
+ * buttons and the login brand panel, plus an indigo accent for active/focus
+ * states. Defined as theme tokens so they can be reused via `brand-*` and
+ * `accent-*` utility classes (bg-brand, text-accent, etc.).
  */
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-brand: #334155; /* slate-700 */
+  --color-brand-dark: #1e293b; /* slate-800 */
+  --color-brand-darker: #0f172a; /* slate-900 */
+  --color-accent: #6366f1; /* indigo-500 */
+  --color-accent-soft: #818cf8; /* indigo-400 */
 }
 
 html {

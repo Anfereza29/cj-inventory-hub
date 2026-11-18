@@ -37,7 +37,7 @@ export function Modal({
         className="mt-10 w-full max-w-sm rounded-2xl bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between rounded-t-2xl bg-slate-900 px-6 py-4">
+        <div className="flex items-start justify-between rounded-t-2xl bg-gradient-to-r from-brand-darker to-brand px-6 py-4">
           <div>
             <h2 className="text-lg font-bold text-white">{title}</h2>
             {subtitle ? <p className="text-xs text-slate-400">{subtitle}</p> : null}

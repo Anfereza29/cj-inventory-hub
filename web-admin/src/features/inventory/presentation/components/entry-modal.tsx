@@ -96,7 +96,7 @@ export function EntryModal({
           type="button"
           onClick={search}
           disabled={isSearching || ocNumber.trim().length === 0}
-          className="rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="rounded-md bg-brand px-3 py-2 text-sm font-medium text-white transition hover:bg-brand-dark disabled:opacity-60"
         >
           {isSearching ? '...' : inventoryStrings.searchOc}
         </button>
