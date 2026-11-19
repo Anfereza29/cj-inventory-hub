@@ -16,6 +16,7 @@ import type {
   InventoryRepository,
   QuickIssueInput,
   QuickMovementResult,
+  QuickReceiptInput,
   RegisterCountInput,
   RegisterEntryInput,
 } from '../../domain/repositories/inventory-repository';
@@ -117,6 +118,20 @@ export class InventoryRepositoryImpl implements InventoryRepository {
   async registerEntry(input: RegisterEntryInput): Promise<Result<void>> {
     try {
       await this.ds.insertEntry(input);
+      return success(undefined);
+    } catch (error) {
+      return failure('UNKNOWN', msg(error));
+    }
+  }
+
+  async registerQuickReceipt(input: QuickReceiptInput): Promise<Result<void>> {
+    try {
+      await this.ds.insertQuickReceipt({
+        materialId: input.materialId,
+        quantity: input.quantity,
+        note: input.note,
+        createdBy: input.createdBy,
+      });
       return success(undefined);
     } catch (error) {
       return failure('UNKNOWN', msg(error));

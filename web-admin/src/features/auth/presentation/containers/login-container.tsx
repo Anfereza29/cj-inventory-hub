@@ -25,7 +25,7 @@ export function LoginContainer() {
     startTransition(async () => {
       const result = await signInAction(email, password);
       if (result.ok) {
-        router.replace('/inventory');
+        router.replace(result.redirectTo ?? '/inventory');
         router.refresh();
         return;
       }

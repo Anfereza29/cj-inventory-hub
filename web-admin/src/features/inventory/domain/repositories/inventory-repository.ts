@@ -68,6 +68,19 @@ export interface RegisterCountInput {
   createdBy: string | null;
 }
 
+/**
+ * Simplified warehouse reception used by the dedicated warehouseman view.
+ * Registers an incoming ('in') movement WITHOUT a purchase order: only the
+ * material, the quantity and an optional short note (e.g. remission number)
+ * are required. Writes through the same Kardex ledger as the admin entry flow.
+ */
+export interface QuickReceiptInput {
+  materialId: string;
+  quantity: number;
+  note: string | null;
+  createdBy: string | null;
+}
+
 /** All inventory operations. Implemented by the data layer against MySQL. */
 export interface InventoryRepository {
   // HU-00
@@ -83,6 +96,9 @@ export interface InventoryRepository {
   // HU-01
   findPurchaseOrderByNumber(ocNumber: string): Promise<Result<PurchaseOrder | null>>;
   registerEntry(input: RegisterEntryInput): Promise<Result<void>>;
+
+  // Warehouseman view: simplified reception without a purchase order.
+  registerQuickReceipt(input: QuickReceiptInput): Promise<Result<void>>;
 
   // HU-02
   listWorkFronts(): Promise<Result<WorkFront[]>>;

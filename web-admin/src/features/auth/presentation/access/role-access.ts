@@ -37,6 +37,19 @@ export function sectionsForRole(role: UserRole): AdminSection[] {
   return ADMIN_SECTIONS.filter((section) => section.allowedRoles.includes(role));
 }
 
+/** Route reserved for the simplified warehouseman reception view. */
+export const WAREHOUSE_HOME = '/recepcion';
+/** Default landing for admin-capable roles. */
+export const ADMIN_HOME = '/inventory';
+
+/**
+ * Landing route right after login, by role. Warehousemen go to the dedicated,
+ * simplified reception screen; everyone else to the admin inventory hub.
+ */
+export function landingPathForRole(role: UserRole): string {
+  return role === 'warehouseman' ? WAREHOUSE_HOME : ADMIN_HOME;
+}
+
 export function canAccessPath(role: UserRole, pathname: string): boolean {
   const section = ADMIN_SECTIONS.find((item) => pathname.startsWith(item.href));
   // Unknown admin paths default to allowed only if the user has any section.

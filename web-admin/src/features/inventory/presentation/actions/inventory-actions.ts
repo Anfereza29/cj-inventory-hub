@@ -4,8 +4,9 @@ import { readSession } from '@/lib/session';
 import { provideInventoryRepository } from '@/core/di/inventory.di.server';
 import type { AbcClass } from '../../domain/entities/material';
 import type { CountDifference } from '../../domain/entities/reconciliation';
-import { CreateMaterial } from '../../domain/usecases/material-usecases';
+import { CreateMaterial, ListMaterials } from '../../domain/usecases/material-usecases';
 import { FindPurchaseOrder, RegisterEntry } from '../../domain/usecases/entry-usecases';
+import { RegisterQuickReceipt } from '../../domain/usecases/quick-receipt-usecases';
 import { CreateIssue } from '../../domain/usecases/issue-usecases';
 import { RegisterCount } from '../../domain/usecases/report-usecases';
 import type { PurchaseOrder } from '../../domain/entities/purchase-order';
@@ -56,6 +57,36 @@ export async function registerEntryAction(input: {
   remissionNote: string | null;
 }): Promise<ActionResult> {
   const useCase = new RegisterEntry(provideInventoryRepository());
+  const result = await useCase.execute({ ...input, createdBy: await currentUserId() });
+  return result.ok ? { ok: true } : { ok: false, error: result.error.message };
+}
+
+// Warehouseman view: list the active catalog for the material picker.
+export async function listMaterialsAction(): Promise<{
+  ok: boolean;
+  materials?: { id: string; code: string; description: string; unit: string }[];
+  error?: string;
+}> {
+  const useCase = new ListMaterials(provideInventoryRepository());
+  const result = await useCase.execute();
+  if (!result.ok) {
+    return { ok: false, error: result.error.message };
+  }
+  return {
+    ok: true,
+    materials: result.value
+      .filter((m) => m.isActive)
+      .map((m) => ({ id: m.id, code: m.code, description: m.description, unit: m.unit })),
+  };
+}
+
+// Warehouseman view: register a simplified reception (no purchase order).
+export async function registerQuickReceiptAction(input: {
+  materialId: string;
+  quantity: number;
+  note: string | null;
+}): Promise<ActionResult> {
+  const useCase = new RegisterQuickReceipt(provideInventoryRepository());
   const result = await useCase.execute({ ...input, createdBy: await currentUserId() });
   return result.ok ? { ok: true } : { ok: false, error: result.error.message };
 }

@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# one-off DB seed/verify scripts (run locally, not part of the deployed app)
+seed-*.mjs
+verify-*.mjs

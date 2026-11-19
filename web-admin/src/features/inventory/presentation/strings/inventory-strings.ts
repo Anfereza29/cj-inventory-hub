@@ -69,4 +69,19 @@ export const inventoryStrings = {
   exportExcel: 'Exportar a Excel',
   consumedQty: 'Consumo',
   totalCost: 'Costo total',
+
+  // Warehouseman reception view (vista dedicada del obrero)
+  receiptTitle: 'Registrar entrada de material',
+  receiptSubtitle: 'Selecciona el material y la cantidad recibida.',
+  receiptMaterialLabel: 'Material',
+  receiptMaterialPlaceholder: 'Elige un material…',
+  receiptQuantityLabel: 'Cantidad recibida',
+  receiptNoteLabel: 'N° de remisión o nota (opcional)',
+  receiptNotePlaceholder: 'Ej: Remisión 1234 / proveedor',
+  receiptSubmit: 'Registrar entrada',
+  receiptSubmitting: 'Registrando…',
+  receiptRegistered: 'Entrada registrada correctamente.',
+  receiptNewOne: 'Registrar otra entrada',
+  receiptNoMaterials: 'No hay materiales activos en el catálogo.',
+  receiptSignOut: 'Salir',
 } as const;

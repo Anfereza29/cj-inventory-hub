@@ -2,7 +2,10 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { provideServerAuthRepository } from '@/core/di/auth.di.server';
 import { GetCurrentUser } from '@/features/auth/domain/usecases/get-current-user';
-import { sectionsForRole } from '@/features/auth/presentation/access/role-access';
+import {
+  sectionsForRole,
+  WAREHOUSE_HOME,
+} from '@/features/auth/presentation/access/role-access';
 import { SignOutButton } from '@/features/auth/presentation/components/sign-out-button';
 
 // Reads the session cookie (cookies()) on every request, so this layout
@@ -23,6 +26,13 @@ export default async function AdminLayout({ children }: LayoutProps<'/'>) {
   }
 
   const user = result.value;
+
+  // Warehousemen only use the simplified reception view; keep them out of the
+  // full admin panel even if they navigate to an admin URL directly.
+  if (user.role === 'warehouseman') {
+    redirect(WAREHOUSE_HOME);
+  }
+
   const sections = sectionsForRole(user.role);
 
   return (

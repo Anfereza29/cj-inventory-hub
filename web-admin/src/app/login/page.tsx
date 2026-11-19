@@ -2,19 +2,20 @@ import { redirect } from 'next/navigation';
 import { provideServerAuthRepository } from '@/core/di/auth.di.server';
 import { GetCurrentUser } from '@/features/auth/domain/usecases/get-current-user';
 import { LoginContainer } from '@/features/auth/presentation/containers/login-container';
+import { landingPathForRole } from '@/features/auth/presentation/access/role-access';
 
 // Reads the session cookie (cookies()) on every request; blocking route.
 export const instant = false;
 
 /**
  * Thin login route. Delegates rendering to LoginContainer.
- * If a session already exists, go straight to the inventory hub.
+ * If a session already exists, send the user to their role-based landing.
  */
 export default async function LoginPage() {
   const getCurrentUser = new GetCurrentUser(provideServerAuthRepository());
   const result = await getCurrentUser.execute();
   if (result.ok && result.value) {
-    redirect('/inventory');
+    redirect(landingPathForRole(result.value.role));
   }
 
   return (

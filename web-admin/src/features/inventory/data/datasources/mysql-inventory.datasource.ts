@@ -194,6 +194,36 @@ export class MysqlInventoryDataSource {
     }
   }
 
+  /**
+   * Warehouseman view: insert an 'in' movement without a purchase order.
+   * Same Kardex ledger as insertEntry, but purchase_order_id stays NULL and no
+   * PO status is touched. Wrapped in a transaction for consistency.
+   */
+  async insertQuickReceipt(params: {
+    materialId: string;
+    quantity: number;
+    note: string | null;
+    createdBy: string | null;
+  }): Promise<void> {
+    const pool = getPool();
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      await conn.execute(
+        `INSERT INTO stock_movements
+           (material_id, movement_type, quantity, remission_note, created_by)
+         VALUES (?, 'in', ?, ?, ?)`,
+        [params.materialId, params.quantity, params.note, params.createdBy],
+      );
+      await conn.commit();
+    } catch (error) {
+      await conn.rollback();
+      throw error;
+    } finally {
+      conn.release();
+    }
+  }
+
   async selectWorkFronts(): Promise<WorkFrontRow[]> {
     const [rows] = await getPool().query<WorkFrontRow[]>(
       `SELECT wf.id, wf.project_id, p.name AS project_name, wf.name
